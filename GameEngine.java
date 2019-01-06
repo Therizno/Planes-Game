@@ -15,9 +15,10 @@ import javafx.scene.input.MouseEvent;
 
 public class GameEngine extends Application
 {
+    private GameState currentState;
 
-    private int xWidth;
-    private int yHeight;
+    static final int XWIDTH = 1200;
+    static final int YHEIGHT = 600;
 
     public static void main(String[] args){
 
@@ -33,24 +34,28 @@ public class GameEngine extends Application
 
         stage.setTitle("GAMETITLE");
 
-        xWidth = 1200;
-        yHeight = 600;
-
         Group rootNode = new Group();       //sets the root node, scene
         Scene scene = new Scene(rootNode);
+        scene.getStylesheets().add("style.css");
         stage.setScene(scene);
 
-        Canvas canvas = new Canvas(xWidth, yHeight);    //creates canvas, graphicscontext
+        Canvas canvas = new Canvas(XWIDTH, YHEIGHT);    //creates canvas, graphicscontext
         rootNode.getChildren().add(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         
         /*
-        sets how user input is stored
+        creates state and input objects
         */
 
         ArrayList<String> userInput = new ArrayList<String>();
+        currentState = new StartMenu(rootNode);
         MouseInput mouse = new MouseInput();
+        
+        
+        /*
+        sets how global user input is stored
+        */
 
         scene.setOnKeyPressed(
         new EventHandler<KeyEvent>(){
@@ -74,6 +79,8 @@ public class GameEngine extends Application
         scene.setOnMousePressed(
         new EventHandler<MouseEvent>(){
             public void handle(MouseEvent event){
+                mouse.mouseX = event.getScreenX();
+                mouse.mouseY = event.getScreenY();
                 mouse.mousePressed = true;
             }
         });
@@ -81,20 +88,19 @@ public class GameEngine extends Application
         scene.setOnMouseReleased(
         new EventHandler<MouseEvent>(){
             public void handle(MouseEvent event){
+                mouse.mouseX = event.getScreenX();
+                mouse.mouseY = event.getScreenY();
+                currentState.onMouseRelease(mouse.mouseX, mouse.mouseY);
                 mouse.mousePressed = false;
             }
         });
-
-
-        /*
-        sets up the game objects
-        */
-
-        Plane player = new Plane(xWidth/2, yHeight - 50, 2, 1, "player_texture.png");
-        player.addGun(new Gun(10, 100, "m240"));
-        rootNode.getChildren().add(player.display());
-
-        ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
+        
+        scene.setOnMouseClicked(
+        new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                currentState.onMouseClick(event.getScreenX(), event.getScreenY());
+            }
+        });
 
 
         /*
@@ -112,38 +118,16 @@ public class GameEngine extends Application
 
                 double time = System.currentTimeMillis() - startTime;
                 
-                /*
-                game logic goes here
-                */
-
-                gc.clearRect(0, 0, xWidth, yHeight);
-
-
-                if(userInput.contains("A")){
-                    player.turnLeft();
-                }
-                if(userInput.contains("D")){
-                    player.turnRight();
-                }
+                gc.clearRect(0, 0, XWIDTH, YHEIGHT);
+                
                 if(mouse.mousePressed){
-                    for(Bullet b : player.fireGuns(time)){
-                        bulletList.add(b);
-                        rootNode.getChildren().add(b.display());
-                    }
+                    currentState.onMousePress(mouse.mouseX, mouse.mouseY);
                 }
 
-
-                /*
-                display everything
-                */
-
-                for(Bullet b : bulletList){
-                    b.display();
-                    b.update();
-                }
-
-                player.display();
-                player.update();
+                currentState = currentState.newState();
+                
+                currentState.handleKeyboardInput(userInput);
+                currentState.updateAndDisplay();
 
             }
         });

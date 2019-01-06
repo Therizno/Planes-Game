@@ -35,11 +35,11 @@ public class Plane extends Entity
         assert (guns.size() < 3);       //currently only two gun capacity
     }
 
-    public ArrayList<Bullet> fireGuns(double currentTime){
+    public ArrayList<Bullet> fireGuns(){
         ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 
         for(Gun g : guns){
-            Bullet b = g.fire(xPos(), yPos(), angle(), currentTime);
+            Bullet b = g.fire(xPos(), yPos(), angle());
             if(b != null){
                 bullets.add(b);
             }

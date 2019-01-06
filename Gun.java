@@ -15,12 +15,13 @@ public class Gun
         fireFrequency = frequency;
         name = gunName;
 
-        timeLastFired = 0;
+        timeLastFired = System.currentTimeMillis();
         xOffset = 0;
         yOffset = 0;
     }
 
-    public Bullet fire(double x, double y, double direction, double currentTime){;
+    public Bullet fire(double x, double y, double direction){
+        double currentTime = System.currentTimeMillis();
         double timeSinceLastFired = currentTime - timeLastFired;
         if(timeSinceLastFired >= fireFrequency){
             timeLastFired = currentTime;
