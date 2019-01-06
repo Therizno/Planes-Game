@@ -11,6 +11,7 @@ import javafx.util.Duration;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class GameEngine extends Application
 {
@@ -49,6 +50,7 @@ public class GameEngine extends Application
         */
 
         ArrayList<String> userInput = new ArrayList<String>();
+        MouseInput mouse = new MouseInput();
 
         scene.setOnKeyPressed(
         new EventHandler<KeyEvent>(){
@@ -69,16 +71,34 @@ public class GameEngine extends Application
             }
         });
 
+        scene.setOnMousePressed(
+        new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                mouse.mousePressed = true;
+            }
+        });
+
+        scene.setOnMouseReleased(
+        new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                mouse.mousePressed = false;
+            }
+        });
+
 
         /*
         sets up the game objects
         */
 
-        Entity player = new Plane(xWidth/2, yHeight - 50, 2, 1, "player_texture.png");
+        Plane player = new Plane(xWidth/2, yHeight - 50, 2, 1, "player_texture.png");
+        player.addGun(new Gun(10, 100, "m240"));
         rootNode.getChildren().add(player.display());
 
+        ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
+
+
         /*
-        sets the gameLoop, begins the gameLoop
+        creates the gameLoop, begins the gameLoop
         */
 
         Timeline gameLoop = new Timeline();
@@ -98,11 +118,28 @@ public class GameEngine extends Application
 
                 gc.clearRect(0, 0, xWidth, yHeight);
 
+
                 if(userInput.contains("A")){
                     player.turnLeft();
                 }
                 if(userInput.contains("D")){
                     player.turnRight();
+                }
+                if(mouse.mousePressed){
+                    for(Bullet b : player.fireGuns(time)){
+                        bulletList.add(b);
+                        rootNode.getChildren().add(b.display());
+                    }
+                }
+
+
+                /*
+                display everything
+                */
+
+                for(Bullet b : bulletList){
+                    b.display();
+                    b.update();
                 }
 
                 player.display();

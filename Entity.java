@@ -9,11 +9,11 @@ public abstract class Entity
 
     private double turnSpeed;   //degrees
 
-    public Entity(double xStart, double yStart, double speed, double turn){
+    public Entity(double xStart, double yStart, double angle, double speed, double turn){
         x = xStart;
         y = yStart;
         magnitude = speed;
-        theta = Math.PI/-2;
+        theta = angle;
         turnSpeed = turn;
     }
 
