@@ -64,6 +64,8 @@ public class GameEngine extends Application
                 if(!userInput.contains(keyCode)){
                     userInput.add(keyCode);
                 }
+                
+                currentState.onKeyPress(keyCode);
             }
         });
 
@@ -73,6 +75,8 @@ public class GameEngine extends Application
             public void handle(KeyEvent event){
                 String keyCode = event.getCode().toString();
                 userInput.remove(keyCode);
+                
+                currentState.onKeyRelease(keyCode);
             }
         });
 
@@ -126,7 +130,7 @@ public class GameEngine extends Application
 
                 currentState = currentState.newState();
                 
-                currentState.handleKeyboardInput(userInput);
+                currentState.onKeyHold(userInput);
                 currentState.updateAndDisplay();
 
             }

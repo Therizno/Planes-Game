@@ -17,7 +17,7 @@ public abstract class Level implements GameState
         pauseGame = false;
     }
     
-    public void handleKeyboardInput(ArrayList<String> input){
+    public void onKeyHold(ArrayList<String> input){
         if(input.contains("A")){
             player.turnLeft();
         }
@@ -25,6 +25,13 @@ public abstract class Level implements GameState
             player.turnRight();
         }
     }
+    
+    public void onKeyPress(String keyCode){
+        if(keyCode.equals("ESCAPE")){
+            pauseGame = true;
+        }
+    }
+
     public void onMousePress(double mouseX, double mouseY){
         for(Bullet b : player.fireGuns()){
             bulletList.add(b);
@@ -34,7 +41,8 @@ public abstract class Level implements GameState
     
     public GameState newState(){
         if(pauseGame){
-            return null;
+            pauseGame = false;
+            return new PauseState(this, root);
         }
         return this;
     }

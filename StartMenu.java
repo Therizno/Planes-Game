@@ -23,7 +23,7 @@ public class StartMenu implements GameState
         buttonW = 140;
         buttonH = 70;
         
-        startButton = fac.defaultButton("START", GameEngine.XWIDTH/2, GameEngine.YHEIGHT/2, buttonW, buttonH);
+        startButton = fac.defaultButton("START", fac.centerX(buttonW), fac.centerY(buttonH), buttonW, buttonH);
         
         startButton.setOnMouseClicked(
         new EventHandler<MouseEvent>(){
@@ -35,7 +35,14 @@ public class StartMenu implements GameState
         root.getChildren().add(startButton);
     }
     
-    public void handleKeyboardInput(ArrayList<String> input){}
+    public void onKeyHold(ArrayList<String> input){}
+    
+    public void onKeyPress(String keyCode){
+        if(keyCode.equals("ENTER"))
+            started = true;
+    }
+    
+    public void onKeyRelease(String keyCode){}
     public void onMousePress(double mouseX, double mouseY){}
     public void onMouseRelease(double mouseX, double mouseY){}
     public void onMouseClick(double mouseX, double mouseY){}
