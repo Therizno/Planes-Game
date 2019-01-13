@@ -1,20 +1,32 @@
 import java.util.ArrayList;
+
 import javafx.scene.*;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 
 public abstract class Level implements GameState
 {
     private ArrayList<Bullet> bulletList;
     private Plane player;
     private Group root;
+    private Hud playerHud;
     
-    private boolean pauseGame;
+    public boolean pauseGame;
+    private boolean guiDisabled;
+    
     
     public Level(Plane player, Group rootNode){
         bulletList = new ArrayList<Bullet>();
+        
         this.player = player;
         root = rootNode;
         
+        //set up hud
+        playerHud = new Hud(this);
+        root.getChildren().add(playerHud.hud());
+        
         pauseGame = false;
+        guiDisabled = false;
     }
     
     public void onKeyHold(ArrayList<String> input){
@@ -41,7 +53,6 @@ public abstract class Level implements GameState
     
     public GameState newState(){
         if(pauseGame){
-            pauseGame = false;
             return new PauseState(this, root);
         }
         return this;
@@ -56,5 +67,12 @@ public abstract class Level implements GameState
 
         player.display();
         player.update();
+        
+        playerHud.updateHealth(player.getHealth(), player.getMaxHealth());
+        playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
+        playerHud.updateMoney(player.getMoney());
+        
+        pauseGame = false;
     }
+    
 }

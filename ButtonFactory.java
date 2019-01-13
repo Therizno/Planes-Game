@@ -33,7 +33,7 @@ public class ButtonFactory
         return b;
     }
     
-    //fix this method!
+
     public Group buttonMenu(String title, LinkedHashMap<String, EventHandler<MouseEvent>> actionMap){
         Group menuGroup = new Group();
         
@@ -54,10 +54,7 @@ public class ButtonFactory
         int y = centerY(ySize);
         
         
-        Rectangle menuBox = new Rectangle(x, y, xSize, ySize);
-        menuBox.setFill(Color.rgb(47, 52, 57));
-        menuBox.setArcWidth(18);
-        menuBox.setArcHeight(18);
+        Rectangle menuBox = guiRect(x, y, xSize, ySize);
         menuGroup.getChildren().add(menuBox);
         
         Button titleText = defaultButton(title, x, y,  xSize, titleBoxHeight);
@@ -81,6 +78,16 @@ public class ButtonFactory
         }
         
         return menuGroup;
+    }
+    
+    
+    public Rectangle guiRect(int x, int y, int xSize, int ySize){
+        Rectangle box = new Rectangle(x, y, xSize, ySize);
+        box.setFill(Color.rgb(47, 52, 57));
+        box.setArcWidth(18);
+        box.setArcHeight(18);
+        
+        return box;
     }
     
     

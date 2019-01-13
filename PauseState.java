@@ -14,7 +14,7 @@ public class PauseState implements GameState
     private GameState previousState;
     ButtonFactory fac;
     
-    //fix this constructor! no HashMap!
+    
     public PauseState(GameState previousState, Group rootNode)
     {
         theState = this;

@@ -4,7 +4,7 @@ public class TestLevel extends Level
 {
     public TestLevel(Plane player, Group rootNode){
         super(player, rootNode);
-        player.addGun(new Gun(10, 100, "m240"));
+        player.addGun(new Gun(10, 100, "m240", 100));
         rootNode.getChildren().add(player.display());
     }
 
