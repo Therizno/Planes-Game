@@ -50,7 +50,7 @@ public class StartMenu implements GameState
     public GameState newState(){
         if(started){
             root.getChildren().clear();
-            return new TestLevel(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 4, 2, "player_texture.png", 100), root);
+            return new TestLevel(root);
         }
         
         return this;

@@ -1,4 +1,5 @@
 import javafx.scene.Node;
+import javafx.geometry.Point2D;
 
 public abstract class Entity
 {
@@ -42,8 +43,10 @@ public abstract class Entity
         return turnSpeed;
     }
     public void setTurnSpeed(double newSpeed){
-        assert newSpeed >= 0;
         turnSpeed = newSpeed;
+        if(turnSpeed < 0){
+            turnSpeed = 0;
+        }
     }
 
     public double dX(){
@@ -53,10 +56,21 @@ public abstract class Entity
         return magnitude * Math.sin(theta);
     }
 
+    public abstract boolean containsPoint(Point2D p);
+    public abstract boolean collide(Entity e);
+    
     public void update(){
         x += dX();
         y += dY();
     }
 
     public abstract Node display();
+    
+    //utility methods
+    public double relativeX(double magnitude){
+        return xPos() + magnitude * Math.cos(angle());
+    }
+    public double relativeY(double magnitude){
+        return yPos() + magnitude * Math.sin(angle());
+    }
 }
