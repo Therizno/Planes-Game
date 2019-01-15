@@ -71,4 +71,8 @@ public class Gun
     public int getMaxAmmo(){
         return maxAmmo;
     }
+    
+    public double getVelocity(){
+        return gunVelocity;
+    }
 }

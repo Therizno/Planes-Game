@@ -55,6 +55,11 @@ public abstract class Entity
     public double dY(){
         return magnitude * Math.sin(theta);
     }
+    
+    public void teleport(double newX, double newY){
+        x = newX;
+        y = newY;
+    }
 
     public abstract boolean containsPoint(Point2D p);
     public abstract boolean collide(Entity e);

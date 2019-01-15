@@ -3,7 +3,7 @@ import javafx.scene.*;
 public class TestLevel extends Level
 {
     public TestLevel(Group rootNode){
-        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 1, 2, "player_texture.png", 100), rootNode);
+        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 3, 3, "player_texture.png", 100), rootNode);
         player.addGun(new Gun(10, 100, "m240", 100));
         
         spawn(new Plane(100, 100, 0, 0, "player_texture.png", 100), true);

@@ -39,6 +39,10 @@ public class Plane extends Entity
 
         guns = new ArrayList<Gun>();
         
+        maxHealth = startHealth;
+        health = startHealth;
+        money = 0;
+        
         
         /*
          * generating hitbox
@@ -83,11 +87,6 @@ public class Plane extends Entity
             debugCircle = new Circle(xPos(), yPos(), 10);
             displayGroup.getChildren().add(debugCircle);
         }
-        
-        
-        maxHealth = startHealth;
-        health = startHealth;
-        money = 0;
     }
 
     @Override
@@ -100,6 +99,15 @@ public class Plane extends Entity
             r.getTransforms().clear();
             r.getTransforms().add(new Rotate(Math.toDegrees(angle()), xPos(), yPos()));
         }
+    }
+    
+    @Override
+    public void teleport(double newX, double newY){
+        for (Rectangle r : hitbox){
+            r.setX(newX + (r.getX()-xPos()));
+            r.setY(newY + (r.getY()-yPos()));
+        }
+        super.teleport(newX, newY);
     }
     
     public boolean containsPoint(Point2D p){
@@ -139,6 +147,14 @@ public class Plane extends Entity
         return displayGroup;
     }
 
+    //makes a shallow copy
+    public ArrayList<Gun> getGuns(){
+        ArrayList<Gun> gl = new ArrayList<Gun>();
+        for(Gun g : guns){
+            gl.add(g);
+        }
+        return gl;
+    }
     public void addGun(Gun gun){
         if(guns.size() < 2){        //max number of guns is currently 2
             guns.add(gun);

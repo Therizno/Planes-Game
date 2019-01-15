@@ -55,6 +55,7 @@ public abstract class Level implements GameState
     public void onMousePress(double mouseX, double mouseY){
         for(Bullet b : player.fireGuns()){
             bulletList.add(b);
+            entityList.add(b);
             root.getChildren().add(b.display());
         }
     }
@@ -67,11 +68,27 @@ public abstract class Level implements GameState
     }
     
     public void updateAndDisplay(){
-        
-        for(Bullet b : bulletList){
-            b.display();
-            b.update();
+        //move camera with player
+        int tpX = 0;
+        int tpY = 0;
+        if(player.xPos() < 0){
+            tpX = GameEngine.XWIDTH;
         }
+        else if(player.yPos() < 0){
+            tpY = GameEngine.YHEIGHT;
+        }
+        else if(player.xPos() > GameEngine.XWIDTH){
+            tpX = -GameEngine.XWIDTH;
+        }
+        else if(player.yPos() > GameEngine.YHEIGHT){
+            tpY = -GameEngine.YHEIGHT;
+        }
+        if(tpX != 0 || tpY != 0){
+            for(Entity e : entityList){
+                e.teleport(e.xPos()+tpX, e.yPos()+tpY);
+            }
+        }
+        
         
         for(Entity e : entityList){
             e.display();
@@ -79,9 +96,6 @@ public abstract class Level implements GameState
         }
 
         detectCollisions();
-        
-        player.display();
-        player.update();
         
         playerHud.updateHealth(player.getHealth(), player.getMaxHealth());
         playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
