@@ -9,7 +9,7 @@ public abstract class Level implements GameState
     //entity management data structures
     private ArrayList<Entity> entityList;
     private ArrayList<Bullet> bulletList;
-    private ArrayList<Entity> enemyList;
+    private ArrayList<CombatEntity> enemyList;
     
     protected Plane player;
     private Group root;
@@ -22,7 +22,7 @@ public abstract class Level implements GameState
     public Level(Plane player, Group rootNode){
         entityList = new ArrayList<Entity>();
         bulletList = new ArrayList<Bullet>();
-        enemyList = new ArrayList<Entity>();
+        enemyList = new ArrayList<CombatEntity>();
         
         this.player = player;
         entityList.add(player);
@@ -56,7 +56,7 @@ public abstract class Level implements GameState
         for(Bullet b : player.fireGuns()){
             bulletList.add(b);
             entityList.add(b);
-            root.getChildren().add(b.display());
+            root.getChildren().add(0, b.display());
         }
     }
     
@@ -89,15 +89,32 @@ public abstract class Level implements GameState
             }
         }
         
+        for(int i = 0; i < enemyList.size(); i++){
+            CombatEntity enemy = enemyList.get(i);
+            if(enemy.getHealth() == 0){
+                player.addMoney(enemy.getReward());
+                entityList.remove(enemy);
+                enemyList.remove(i);
+                root.getChildren().remove(enemy.display());
+                
+                //create an explosion effect
+                ParticleEmitter p = ParticleEmitter.explosion(enemy.xPos(), enemy.yPos());
+                for(int j = 0; i < 50; i++){
+                    Particle par = p.emitSmoke();
+                    entityList.add(par);
+                    root.getChildren().add(par.display());
+                }
+            }
+        }
         
         for(Entity e : entityList){
             e.display();
             e.update();
         }
-
+        
         detectCollisions();
         
-        playerHud.updateHealth(player.getHealth(), player.getMaxHealth());
+        playerHud.updateHealth((int)player.getHealth(), (int)player.getMaxHealth());
         playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
         playerHud.updateMoney(player.getMoney());
         
@@ -107,25 +124,27 @@ public abstract class Level implements GameState
     private void detectCollisions(){
         //temporary, revise later
         for(int i = 0; i < enemyList.size(); i++){
-            Entity enemy = enemyList.get(i);
+            CombatEntity enemy = enemyList.get(i);
             for(int j = 0; j < bulletList.size(); j++){
                 Bullet b = bulletList.get(j);
                 if(enemy.collide(b) || b.collide(enemy)){
-                    bulletList.remove(b);
-                    enemyList.remove(enemy);
+                    enemy.subHealth(b.getDamage());
+                    bulletList.remove(j);
                     entityList.remove(b);
-                    entityList.remove(enemy);
                     root.getChildren().remove(b.display());
-                    root.getChildren().remove(enemy.display());
                 }
             }
         }
     }
     
-    public void spawn(Entity object, boolean enemy){
+    public void spawn(Entity object){
         entityList.add(object);
         root.getChildren().add(object.display());
-        if(enemy)
-            enemyList.add(object);
+    }
+    public void spawnEnemy(CombatEntity enemy, int reward){
+        entityList.add(enemy);
+        enemyList.add(enemy);
+        enemy.setReward(reward);
+        root.getChildren().add(enemy.display());
     }
 }

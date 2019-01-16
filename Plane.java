@@ -11,10 +11,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class Plane extends Entity
+public class Plane extends CombatEntity
 {
-    private ArrayList<Gun> guns;
-    
     private Group displayGroup;
     private ImageView img;
     private Image planeImage;
@@ -22,26 +20,15 @@ public class Plane extends Entity
     private ArrayList<Rectangle> hitbox;
     public boolean displayHitbox;
     private Circle debugCircle;
-    
-    //important stats
-    private int maxHealth;
-    private int health;
-    private int money;
 
     public Plane(double xStart, double yStart, double speed, double turn, String imageName, int startHealth)
     {
-        super(xStart, yStart, Math.PI/-2, speed, turn);
+        super(xStart, yStart, Math.PI/-2, speed, turn, startHealth);
         displayGroup = new Group();
         
         planeImage = new Image(imageName);
         img = new ImageView(planeImage);
         displayGroup.getChildren().add(img);
-
-        guns = new ArrayList<Gun>();
-        
-        maxHealth = startHealth;
-        health = startHealth;
-        money = 0;
         
         
         /*
@@ -147,103 +134,14 @@ public class Plane extends Entity
         return displayGroup;
     }
 
-    //makes a shallow copy
-    public ArrayList<Gun> getGuns(){
-        ArrayList<Gun> gl = new ArrayList<Gun>();
-        for(Gun g : guns){
-            gl.add(g);
-        }
-        return gl;
-    }
     public void addGun(Gun gun){
-        if(guns.size() < 2){        //max number of guns is currently 2
-            guns.add(gun);
-            if(guns.size() == 2){
-                guns.get(0).setXOffset(10);
-                guns.get(1).setXOffset(-10);
+        if(gunSize() < 2){        //max number of guns is currently 2
+            super.addGun(gun, 0, 10);
+            if(gunSize() == 2){
+                ArrayList<Gun> gl = getGuns();
+                gl.get(0).setXOffset(15);
+                gl.get(1).setXOffset(-15);
             }
         }
-    }
-
-    public ArrayList<Bullet> fireGuns(){
-        ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-
-        for(Gun g : guns){
-            Bullet b = g.fire(xPos(), yPos(), angle());
-            if(b != null){
-                bullets.add(b);
-            }
-        }
-        return bullets;
-    }
-    
-    public int getHealth(){
-        return health;
-    }
-    public void setHealth(int amount){
-        health = amount;
-        if(health < 0){
-            health = 0;
-        }
-        else if(health > maxHealth){
-            health = maxHealth;
-        }
-    }
-    public void addHealth(int amount){
-        health += amount;
-        if(health < 0){
-            health = 0;
-        }
-        else if(health > maxHealth){
-            health = maxHealth;
-        }
-    }
-    public void subHealth(int amount){
-        health -= amount;
-        if(health < 0){
-            health = 0;
-        }
-        else if(health > maxHealth){
-            health = maxHealth;
-        }
-    }
-    
-    public int getMaxHealth(){
-        return maxHealth;
-    }
-    
-    public int getMoney(){
-        return money;
-    }
-    public void setMoney(int amount){
-        money = amount;
-        if(money < 0)
-            money = 0;
-    }
-    public void addMoney(int amount){
-        money += amount;
-        if(money < 0)
-            money = 0;
-    }
-    public void subMoney(int amount){
-        money -= amount;
-        if(money < 0)
-            money = 0;
-    }
-    
-    public int getAmmo(){
-        int totalAmmo = 0;
-        for(Gun g : guns){
-            totalAmmo += g.getAmmo();
-        }
-        return totalAmmo;
-    }
-    
-    public int getMaxAmmo(){
-        int totalAmmo = 0;
-        for(Gun g : guns){
-            totalAmmo += g.getMaxAmmo();
-        }
-        return totalAmmo;
     }
 }

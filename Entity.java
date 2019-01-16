@@ -7,6 +7,7 @@ public abstract class Entity
     private double y;
     private double theta;       //radians
     private double magnitude;
+    private double distanceTraveled;
 
     private double turnSpeed;   //degrees
 
@@ -16,6 +17,7 @@ public abstract class Entity
         magnitude = speed;
         theta = angle;
         turnSpeed = turn;
+        distanceTraveled = 0;
     }
 
     public double xPos(){
@@ -56,6 +58,10 @@ public abstract class Entity
         return magnitude * Math.sin(theta);
     }
     
+    public double getDistanceTraveled(){
+        return distanceTraveled;
+    }
+    
     public void teleport(double newX, double newY){
         x = newX;
         y = newY;
@@ -67,15 +73,16 @@ public abstract class Entity
     public void update(){
         x += dX();
         y += dY();
+        distanceTraveled += magnitude;
     }
 
     public abstract Node display();
     
     //utility methods
-    public double relativeX(double magnitude){
-        return xPos() + magnitude * Math.cos(angle());
+    public double relativeX(double xOffset, double yOffset){
+        return x + xOffset*Math.cos(theta+Math.PI/2) + yOffset*Math.cos(theta);
     }
-    public double relativeY(double magnitude){
-        return yPos() + magnitude * Math.sin(angle());
+    public double relativeY(double xOffset, double yOffset){
+        return y + xOffset*Math.sin(theta+Math.PI/2) + yOffset*Math.sin(theta);
     }
 }

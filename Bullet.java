@@ -5,11 +5,13 @@ import javafx.geometry.Point2D;
 public class Bullet extends Entity
 {
     Line displayLine;
+    private double damage;
 
-    public Bullet(double xStart, double yStart, double angle, double speed)
+    public Bullet(double xStart, double yStart, double angle, double speed, double damage)
     {
         super(xStart, yStart, angle, speed, 0);
         displayLine = new Line();
+        this.damage = damage;
     }
 
     public boolean containsPoint(Point2D p){
@@ -26,5 +28,9 @@ public class Bullet extends Entity
         displayLine.setEndY(yPos()+dY());
 
         return displayLine;
+    }
+    
+    public double getDamage(){
+        return damage;
     }
 }

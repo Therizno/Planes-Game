@@ -11,8 +11,10 @@ public class Gun
     
     private int maxAmmo;
     private int ammo;
+    
+    private double damage;
 
-    public Gun(double velocity, int frequency, String gunName, int ammoCapacity)
+    public Gun(double velocity, int frequency, String gunName, int ammoCapacity, double gunDamage)
     {
         gunVelocity = velocity;
         fireFrequency = frequency;
@@ -24,6 +26,8 @@ public class Gun
         
         maxAmmo = ammoCapacity;
         ammo = ammoCapacity;
+        
+        damage = gunDamage;
     }
 
     public Bullet fire(double x, double y, double direction){
@@ -33,7 +37,7 @@ public class Gun
             if(timeSinceLastFired >= fireFrequency){
                 timeLastFired = currentTime;
                 ammo--;
-                return new Bullet(x + xOffset, y + yOffset, direction, gunVelocity);
+                return new Bullet(x + xOffset*Math.cos(direction+Math.PI/2) + yOffset*Math.cos(direction), y + xOffset*Math.sin(direction+Math.PI/2) + yOffset*Math.sin(direction), direction, gunVelocity, damage);
             }
         }
         return null;
