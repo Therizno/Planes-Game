@@ -68,7 +68,9 @@ public abstract class Level implements GameState
     }
     
     public void updateAndDisplay(){
-        //move camera with player
+        /*
+         * move camera with player
+         */
         int tpX = 0;
         int tpY = 0;
         if(player.xPos() < 0){
@@ -89,6 +91,10 @@ public abstract class Level implements GameState
             }
         }
         
+        
+        /*
+         * enemy logic
+         */
         for(int i = 0; i < enemyList.size(); i++){
             CombatEntity enemy = enemyList.get(i);
             if(enemy.getHealth() == 0){
@@ -107,16 +113,51 @@ public abstract class Level implements GameState
             }
         }
         
-        for(Entity e : entityList){
+        
+        /*
+         * general entity logic
+         */
+        for(int i = 0; i < entityList.size(); i++){
+            Entity e = entityList.get(i);
             e.display();
             e.update();
+            
+            if(e.deAlloc()){
+                entityList.remove(i);
+                bulletList.remove(e);
+                root.getChildren().remove(e.display());
+            }
         }
         
         detectCollisions();
         
+        
+        /*
+         * player logic
+         */
         playerHud.updateHealth((int)player.getHealth(), (int)player.getMaxHealth());
         playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
         playerHud.updateMoney(player.getMoney());
+        
+        if(player.getHealth() < player.getMaxHealth()/3){
+            if(player.emitterSize() == 0){
+                player.addParticleEmitter(ParticleEmitter.smokeTrail(player.xPos(), player.yPos()), 24, -15);
+            }
+            
+            //temporary
+            Particle p = player.getParticleEmitters().get(0).emitSmoke();
+            entityList.add(p);
+            root.getChildren().add(0, p.display());
+        }
+        
+        for(ParticleEmitter p : player.getParticleEmitters()){
+            p.setX(player.relativeX(p.getXOffset(), p.getYOffset()));
+            p.setY(player.relativeY(p.getXOffset(), p.getYOffset()));
+        }
+        
+        //temporary debug
+        player.setHealth((player.getMaxHealth()/3)-1);
+        
         
         pauseGame = false;
     }

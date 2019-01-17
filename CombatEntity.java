@@ -24,6 +24,14 @@ public abstract class CombatEntity extends Entity
         cashReward = 0;
     }
     
+    /*
+     * the game engine takes care of deAllocating CombatEntities independently in order to 
+     * apply death effects, money reward, etc.
+     */
+    public boolean deAlloc(){
+        return false;
+    }
+    
     //makes a shallow copy
     public ArrayList<Gun> getGuns(){
         ArrayList<Gun> gl = new ArrayList<Gun>();

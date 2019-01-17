@@ -78,11 +78,14 @@ public abstract class Entity
 
     public abstract Node display();
     
+    //tells the gameState when to destroy this object
+    public abstract boolean deAlloc();
+    
     //utility methods
     public double relativeX(double xOffset, double yOffset){
-        return x + xOffset*Math.cos(theta+Math.PI/2) + yOffset*Math.cos(theta);
+        return x + xOffset*Math.cos(theta+Math.PI/2) - yOffset*Math.cos(theta);
     }
     public double relativeY(double xOffset, double yOffset){
-        return y + xOffset*Math.sin(theta+Math.PI/2) + yOffset*Math.sin(theta);
+        return y + xOffset*Math.sin(theta+Math.PI/2) - yOffset*Math.sin(theta);
     }
 }

@@ -8,9 +8,10 @@ public class Particle extends Entity
     Image particleImage;
     ImageView img;
     
-    double fadeDistance;
+    double startTime;
+    double fadeTime;
     
-    public Particle(double xStart, double yStart, double angle, double speed, int size, double fadeDistance, String imageName)
+    public Particle(double xStart, double yStart, double angle, double speed, int size, double fadeTime, String imageName)
     {
         super(xStart, yStart, angle, speed, 0);
         
@@ -20,7 +21,8 @@ public class Particle extends Entity
         img.setFitHeight(size);
         img.setFitWidth(size);
         
-        this.fadeDistance = fadeDistance;
+        startTime = System.currentTimeMillis();
+        this.fadeTime = fadeTime;
     }
     
     public boolean containsPoint(Point2D p){
@@ -31,9 +33,16 @@ public class Particle extends Entity
     }
     
     public Node display(){
+        double time = System.currentTimeMillis() - startTime;
+        
         img.setX(xPos());
         img.setY(yPos());
-        img.setOpacity(fadeDistance/getDistanceTraveled());
+        img.setOpacity(1/(time/fadeTime));
+        
         return img;
+    }
+    
+    public boolean deAlloc(){
+        return img.getOpacity() < 0.001;
     }
 }

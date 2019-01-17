@@ -7,7 +7,7 @@ public class ParticleEmitter
     private double particleSpeed;
     private double startAngle;
     private double endAngle;
-    private double length;
+    private double fadeTime;
     private int particleSize;
     
     //for use when attached to an entity
@@ -21,21 +21,26 @@ public class ParticleEmitter
         particleSpeed = speed;
         startAngle = thetaStart;
         endAngle = thetaEnd;
-        this.length = length;
+        fadeTime = length;
         this.particleSize = particleSize;
     }
     
     //preset particle effect
     public static ParticleEmitter explosion(double xStart, double yStart){
         double speed = 2;
-        double radius = 1;
+        double time = 2;
         int pSize = 40;
-        return new ParticleEmitter(xStart, yStart, speed, 0, 2*Math.PI, radius, pSize);
+        return new ParticleEmitter(xStart, yStart, speed, 0, 2*Math.PI, time, pSize);
+    }
+    public static ParticleEmitter smokeTrail(double xStart, double yStart){
+        double time = 5;
+        int pSize = 20;
+        return new ParticleEmitter(xStart, yStart, 1.0, 0.0, 2*Math.PI, time, pSize);
     }
     
     public Particle emitSmoke(){
         double randomAngle = startAngle + endAngle*new Random().nextDouble();
-        return new Particle(x, y, randomAngle, particleSpeed, particleSize, length, "grey_particle.png");
+        return new Particle(x-particleSize/2, y-particleSize/2, randomAngle, particleSpeed, particleSize, fadeTime, "grey_particle.png");
     }
     
     public double getX(){

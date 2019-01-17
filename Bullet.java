@@ -30,6 +30,10 @@ public class Bullet extends Entity
         return displayLine;
     }
     
+    public boolean deAlloc(){
+        return getDistanceTraveled() > 10000;
+    }
+    
     public double getDamage(){
         return damage;
     }

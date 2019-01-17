@@ -35,7 +35,7 @@ public class Plane extends CombatEntity
          * generating hitbox
          */
         hitbox = new ArrayList<Rectangle>();
-        displayHitbox = true;
+        displayHitbox = false;
         
         //mess with these variables to change the size of the hitbox
         int planeRearLength = 58;
@@ -73,6 +73,11 @@ public class Plane extends CombatEntity
         if(displayHitbox){
             debugCircle = new Circle(xPos(), yPos(), 10);
             displayGroup.getChildren().add(debugCircle);
+        }
+        else{
+            for(Rectangle r : hitbox){
+                r.setOpacity(0);
+            }
         }
     }
 
@@ -133,7 +138,7 @@ public class Plane extends CombatEntity
 
         return displayGroup;
     }
-
+    
     public void addGun(Gun gun){
         if(gunSize() < 2){        //max number of guns is currently 2
             super.addGun(gun, 0, 10);
