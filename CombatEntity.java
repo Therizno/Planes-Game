@@ -45,6 +45,7 @@ public abstract class CombatEntity extends Entity
         gun.setXOffset(xOffset);
         gun.setYOffset(yOffset);
     }
+    public abstract void addGun(Gun g);
     public int gunSize(){
         return guns.size();
     }
@@ -55,7 +56,7 @@ public abstract class CombatEntity extends Entity
         ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 
         for(Gun g : guns){
-            Bullet b = g.fire(xPos(), yPos(), angle());
+            Bullet b = g.fire(relativeX(g.getXOffset(), g.getYOffset()), relativeY(g.getXOffset(), g.getYOffset()), angle());
             if(b != null){
                 bullets.add(b);
             }
@@ -106,6 +107,11 @@ public abstract class CombatEntity extends Entity
     
     public double getMaxHealth(){
         return maxHealth;
+    }
+    public void setMaxHealth(double amount){
+        maxHealth = amount;
+        if(maxHealth < 0)
+            maxHealth = 0;
     }
     
     public double getHealth(){

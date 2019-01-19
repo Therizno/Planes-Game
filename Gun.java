@@ -37,12 +37,18 @@ public class Gun
             if(timeSinceLastFired >= fireFrequency){
                 timeLastFired = currentTime;
                 ammo--;
-                return new Bullet(x + xOffset*Math.cos(direction+Math.PI/2) + yOffset*Math.cos(direction), y + xOffset*Math.sin(direction+Math.PI/2) + yOffset*Math.sin(direction), direction, gunVelocity, damage);
+                return new Bullet(x, y, direction, gunVelocity, damage);
             }
         }
         return null;
     }
 
+    public int getXOffset(){
+        return xOffset;
+    }
+    public int getYOffset(){
+        return yOffset;
+    }
     public void setXOffset(int x){
         xOffset = x;
     }
@@ -74,6 +80,12 @@ public class Gun
     
     public int getMaxAmmo(){
         return maxAmmo;
+    }
+    public void setMaxAmmo(int amount){
+        maxAmmo = amount;
+        if(maxAmmo < 0){
+            maxAmmo = 0;
+        }
     }
     
     public double getVelocity(){

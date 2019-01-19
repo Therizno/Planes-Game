@@ -3,13 +3,16 @@ import java.util.ArrayList;
 import javafx.scene.*;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Pair;
 
 public abstract class Level implements GameState
 {
     //entity management data structures
     private ArrayList<Entity> entityList;
-    private ArrayList<Bullet> bulletList;
+    private ArrayList<Pair<CombatEntity, Bullet>> bulletList;
     private ArrayList<CombatEntity> enemyList;
+    
+    private ArrayList<Upgrade> availableUpgrades;
     
     protected Plane player;
     private Group root;
@@ -18,11 +21,15 @@ public abstract class Level implements GameState
     public boolean pauseGame;
     private boolean guiDisabled;
     
+    private EnemyAI ai = new EnemyAI();
+    
     
     public Level(Plane player, Group rootNode){
         entityList = new ArrayList<Entity>();
-        bulletList = new ArrayList<Bullet>();
+        bulletList = new ArrayList<Pair<CombatEntity, Bullet>>();
         enemyList = new ArrayList<CombatEntity>();
+        
+        availableUpgrades = new ArrayList<Upgrade>();
         
         this.player = player;
         entityList.add(player);
@@ -54,7 +61,7 @@ public abstract class Level implements GameState
 
     public void onMousePress(double mouseX, double mouseY){
         for(Bullet b : player.fireGuns()){
-            bulletList.add(b);
+            bulletList.add(new Pair(player, b));
             entityList.add(b);
             root.getChildren().add(0, b.display());
         }
@@ -97,6 +104,15 @@ public abstract class Level implements GameState
          */
         for(int i = 0; i < enemyList.size(); i++){
             CombatEntity enemy = enemyList.get(i);
+            
+            //ai
+            for(Bullet b : ai.planeAI(player, enemy)){
+                entityList.add(b);
+                bulletList.add(new Pair(enemy, b));
+                root.getChildren().add(0, b.display());
+            }
+            
+            //death
             if(enemy.getHealth() == 0){
                 player.addMoney(enemy.getReward());
                 entityList.remove(enemy);
@@ -156,36 +172,66 @@ public abstract class Level implements GameState
         }
         
         //temporary debug
-        player.setHealth((player.getMaxHealth()/3)-1);
+        //player.setHealth((player.getMaxHealth()/3)-1);
         
         
         pauseGame = false;
     }
     
     private void detectCollisions(){
-        //temporary, revise later
         for(int i = 0; i < enemyList.size(); i++){
             CombatEntity enemy = enemyList.get(i);
             for(int j = 0; j < bulletList.size(); j++){
-                Bullet b = bulletList.get(j);
-                if(enemy.collide(b) || b.collide(enemy)){
-                    enemy.subHealth(b.getDamage());
+                Pair<CombatEntity, Bullet> bulletPair = bulletList.get(j);
+                Bullet b = bulletPair.getValue();
+                if(bulletPair.getKey().equals(player)){
+                    if(enemy.collide(b) || b.collide(enemy)){
+                        enemy.subHealth(b.getDamage());
+                        bulletList.remove(j);
+                        entityList.remove(b);
+                        root.getChildren().remove(b.display());
+                    }
+                }
+                else if(player.collide(b) || b.collide(player)){
+                    player.subHealth(b.getDamage());
                     bulletList.remove(j);
                     entityList.remove(b);
                     root.getChildren().remove(b.display());
                 }
             }
         }
+        
+        for(int i = 0; i < bulletList.size(); i++){
+            Pair<CombatEntity, Bullet> bulletPair = bulletList.get(i);
+            Bullet b = bulletPair.getValue();
+            if(!bulletPair.getKey().equals(player)){
+                if(player.collide(b) || b.collide(player)){
+                    
+                }
+            }
+        }
+    }
+    
+    public ArrayList<Upgrade> getUpgrades(){
+        return availableUpgrades;
+    }
+    public void addUpgrade(Upgrade g){
+        availableUpgrades.add(g);
+        playerHud.updateUpgrades();
     }
     
     public void spawn(Entity object){
         entityList.add(object);
         root.getChildren().add(object.display());
     }
-    public void spawnEnemy(CombatEntity enemy, int reward){
+    public void spawnEnemy(CombatEntity enemy, ArrayList<Gun> gunList, int reward){
         entityList.add(enemy);
         enemyList.add(enemy);
         enemy.setReward(reward);
         root.getChildren().add(enemy.display());
+        
+        for(Gun g : gunList){
+            enemy.addGun(g);
+        }
     }
 }

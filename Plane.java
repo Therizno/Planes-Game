@@ -141,7 +141,7 @@ public class Plane extends CombatEntity
     
     public void addGun(Gun gun){
         if(gunSize() < 2){        //max number of guns is currently 2
-            super.addGun(gun, 0, 10);
+            super.addGun(gun, 0, -10);
             if(gunSize() == 2){
                 ArrayList<Gun> gl = getGuns();
                 gl.get(0).setXOffset(15);

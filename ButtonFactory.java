@@ -57,8 +57,7 @@ public class ButtonFactory
         Rectangle menuBox = guiRect(x, y, xSize, ySize);
         menuGroup.getChildren().add(menuBox);
         
-        Button titleText = defaultButton(title, x, y,  xSize, titleBoxHeight);
-        titleText.getStyleClass().add("title-button");
+        Button titleText = titleBox(title, x, y,  xSize, titleBoxHeight);
         menuGroup.getChildren().add(titleText);
         
 
@@ -88,6 +87,12 @@ public class ButtonFactory
         box.setArcHeight(18);
         
         return box;
+    }
+    
+    public Button titleBox(String text, int x, int y, int xSize, int ySize){
+        Button b = defaultButton(text, x, y, xSize, ySize);
+        b.getStyleClass().add("title-button");
+        return b;
     }
     
     

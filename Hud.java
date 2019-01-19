@@ -17,6 +17,8 @@ public class Hud
     Button pause;
     Group hud;
     
+    Group upgradeGroup;
+    
     int playerHealth, playerMoney, playerAmmo;
     Label healthLabel, moneyLabel, ammoLabel;
     int labelXMargin;    //size of margin between the above labels and the edge of the window
@@ -80,8 +82,62 @@ public class Hud
         Rectangle statsBox = fac.guiRect(-20, GameEngine.YHEIGHT - ySize + 20, xSize, ySize);
         hud.getChildren().add(statsBox);
         
+        updateUpgrades();
         
         return hud;
+    }
+    
+    public void updateUpgrades(){
+        if(level.getUpgrades().size() > 0){
+            hud.getChildren().remove(upgradeGroup);
+            upgradeGroup = new Group();
+            
+            ButtonFactory fac = new ButtonFactory();
+            
+
+            int xMargin = 10;
+            int yMargin = 10;
+            
+            int buttonXSize = 100;
+            int buttonYSize = 50;
+            int numUpgrades = level.getUpgrades().size();
+        
+            int buttonX = GameEngine.XWIDTH-(numUpgrades*buttonXSize);
+        
+            Rectangle displayBox = fac.guiRect(buttonX-xMargin, GameEngine.YHEIGHT-buttonYSize-yMargin, (numUpgrades*buttonXSize)+xMargin+100, buttonYSize+yMargin+100);
+            upgradeGroup.getChildren().add(displayBox);
+        
+            
+            int titleRectXMargin = 8;
+            int titleRectYMargin = 8;
+            
+            int titleBoxXSize = buttonXSize-titleRectXMargin;
+            int titleBoxYSize = 40;
+            
+            Rectangle titleRect = fac.guiRect(GameEngine.XWIDTH-titleBoxXSize-titleRectXMargin, GameEngine.YHEIGHT-titleBoxYSize-buttonYSize-titleRectYMargin, titleBoxXSize+titleRectXMargin+100, buttonYSize+titleBoxYSize+titleRectYMargin+100);
+            upgradeGroup.getChildren().add(titleRect);
+            
+            Button title = fac.titleBox("Upgrades", GameEngine.XWIDTH-titleBoxXSize, GameEngine.YHEIGHT-titleBoxYSize-buttonYSize, titleBoxXSize, titleBoxYSize);
+            upgradeGroup.getChildren().add(title);
+        
+            for (Upgrade g : level.getUpgrades()){
+                Button b = fac.defaultButton(g.getName(), buttonX, GameEngine.YHEIGHT-buttonYSize, buttonXSize, buttonYSize);
+                b.getStyleClass().add("upgrade-button");
+                
+                b.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                    public void handle(MouseEvent event){
+                        if(level.player.getMoney() >= g.getCost()){
+                            g.applyUpgrade(level.player);
+                        }
+                    }
+                });
+                
+                upgradeGroup.getChildren().add(b);
+                buttonX += buttonXSize;
+            }   
+            
+            hud.getChildren().add(upgradeGroup);
+        }
     }
     
     public void updateHealth(int health, int maxHealth){
