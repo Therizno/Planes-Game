@@ -132,6 +132,12 @@ public class Hud
                     }
                 });
                 
+                b.setOnMouseEntered(new EventHandler<MouseEvent>(){
+                    public void handle(MouseEvent event){
+                        
+                    }
+                });
+                
                 upgradeGroup.getChildren().add(b);
                 buttonX += buttonXSize;
             }   
@@ -152,15 +158,15 @@ public class Hud
             if(maxHealth == 0)      //prevent div by 0
                 maxHealth = 1;
             
-            float percHealth = health/maxHealth;
+            float percHealth = (float)health/(float)maxHealth;
             if(percHealth > 0.66){
-                healthLabel.getStyleClass().add("label-green");    //green
+                healthLabel.getStyleClass().add("label-green");    
             }
             else if(percHealth <= 0.66 && percHealth > 0.33){
-                healthLabel.getStyleClass().add("label-yellow");   //yellow
+                healthLabel.getStyleClass().add("label-yellow");   
             }
             else{
-                healthLabel.getStyleClass().add("label-red");   //red
+                healthLabel.getStyleClass().add("label-red");
             }
                 
             playerHealth = health;

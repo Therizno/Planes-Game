@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class ParticleEmitter
 {
+    private String particleImage;
     private double x;
     private double y;
     private double particleSpeed;
@@ -14,8 +15,9 @@ public class ParticleEmitter
     private int xOffset;
     private int yOffset;
     
-    public ParticleEmitter(double xStart, double yStart, double speed, double thetaStart, double thetaEnd, double length, int particleSize)
+    public ParticleEmitter(double xStart, double yStart, double speed, double thetaStart, double thetaEnd, double length, int particleSize, String imageName)
     {
+        particleImage = imageName;
         x = xStart;
         y = yStart;
         particleSpeed = speed;
@@ -26,21 +28,21 @@ public class ParticleEmitter
     }
     
     //preset particle effect
-    public static ParticleEmitter explosion(double xStart, double yStart){
+    public static ParticleEmitter smokeExplosion(double xStart, double yStart){
         double speed = 2;
         double time = 2;
         int pSize = 40;
-        return new ParticleEmitter(xStart, yStart, speed, 0, 2*Math.PI, time, pSize);
+        return new ParticleEmitter(xStart, yStart, speed, 0, 2*Math.PI, time, pSize, "grey_particle.png");
     }
     public static ParticleEmitter smokeTrail(double xStart, double yStart){
         double time = 5;
-        int pSize = 20;
-        return new ParticleEmitter(xStart, yStart, 1.0, 0.0, 2*Math.PI, time, pSize);
+        int pSize = 15;
+        return new ParticleEmitter(xStart, yStart, 1.0, 0.0, 2*Math.PI, time, pSize, "grey_particle.png");
     }
     
-    public Particle emitSmoke(){
+    public Particle emitParticle(){
         double randomAngle = startAngle + endAngle*new Random().nextDouble();
-        return new Particle(x-particleSize/2, y-particleSize/2, randomAngle, particleSpeed, particleSize, fadeTime, "grey_particle.png");
+        return new Particle(x-particleSize/2, y-particleSize/2, randomAngle, particleSpeed, particleSize, fadeTime, particleImage);
     }
     
     public double getX(){

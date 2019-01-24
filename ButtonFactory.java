@@ -95,6 +95,19 @@ public class ButtonFactory
         return b;
     }
     
+    public Button messageToUser(String text, String messageStyle){
+        Button b = new Button(text);
+        b.setPrefSize(GameEngine.XWIDTH, GameEngine.YHEIGHT);
+        b.setMaxSize(GameEngine.XWIDTH, GameEngine.YHEIGHT);
+        b.setMinSize(GameEngine.XWIDTH, GameEngine.YHEIGHT);
+        b.setMouseTransparent(true);
+        
+        b.setLayoutX(0);
+        b.setLayoutY(0);
+        b.getStyleClass().add(messageStyle);
+        return b;
+    }
+    
     
     //for centering coordinates of objects
     public int centerX(int xSize){

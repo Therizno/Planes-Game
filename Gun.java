@@ -9,6 +9,8 @@ public class Gun
     private int xOffset;
     private int yOffset; 
     
+    private double drawLength;      //bullet length
+    
     private int maxAmmo;
     private int ammo;
     
@@ -27,6 +29,8 @@ public class Gun
         maxAmmo = ammoCapacity;
         ammo = ammoCapacity;
         
+        drawLength = 0;
+        
         damage = gunDamage;
     }
 
@@ -37,7 +41,10 @@ public class Gun
             if(timeSinceLastFired >= fireFrequency){
                 timeLastFired = currentTime;
                 ammo--;
-                return new Bullet(x, y, direction, gunVelocity, damage);
+                Bullet b = new Bullet(x, y, direction, gunVelocity, damage);
+                if(drawLength > 0)
+                    b.setDrawLength(drawLength);
+                return b;
             }
         }
         return null;
@@ -85,6 +92,13 @@ public class Gun
         maxAmmo = amount;
         if(maxAmmo < 0){
             maxAmmo = 0;
+        }
+    }
+    
+    public void setBulletLength(double length){
+        drawLength = length;
+        if(drawLength < 0){
+            drawLength = 0;
         }
     }
     

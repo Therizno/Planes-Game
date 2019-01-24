@@ -24,6 +24,16 @@ public abstract class CombatEntity extends Entity
         cashReward = 0;
     }
     
+    @Override
+    public void update(){
+        super.update();
+        
+        for(ParticleEmitter p : particleSources){
+            p.setX(relativeX(p.getXOffset(), p.getYOffset()));
+            p.setY(relativeY(p.getXOffset(), p.getYOffset()));
+        }
+    }
+    
     /*
      * the game engine takes care of deAllocating CombatEntities independently in order to 
      * apply death effects, money reward, etc.
@@ -45,6 +55,7 @@ public abstract class CombatEntity extends Entity
         gun.setXOffset(xOffset);
         gun.setYOffset(yOffset);
     }
+    //determine Gun xOffset and yOffset here
     public abstract void addGun(Gun g);
     public int gunSize(){
         return guns.size();

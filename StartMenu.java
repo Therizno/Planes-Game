@@ -50,7 +50,7 @@ public class StartMenu implements GameState
     public GameState newState(){
         if(started){
             root.getChildren().clear();
-            return new TestLevel(root);
+            return new Level1(root);
         }
         
         return this;

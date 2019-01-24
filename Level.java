@@ -105,6 +105,13 @@ public abstract class Level implements GameState
         for(int i = 0; i < enemyList.size(); i++){
             CombatEntity enemy = enemyList.get(i);
             
+            //particles
+            for(ParticleEmitter p : enemy.getParticleEmitters()){
+                Particle par = p.emitParticle();
+                entityList.add(par);
+                root.getChildren().add(0, par.display());
+            }
+            
             //ai
             for(Bullet b : ai.planeAI(player, enemy)){
                 entityList.add(b);
@@ -120,9 +127,9 @@ public abstract class Level implements GameState
                 root.getChildren().remove(enemy.display());
                 
                 //create an explosion effect
-                ParticleEmitter p = ParticleEmitter.explosion(enemy.xPos(), enemy.yPos());
+                ParticleEmitter p = ParticleEmitter.smokeExplosion(enemy.xPos(), enemy.yPos());
                 for(int j = 0; i < 50; i++){
-                    Particle par = p.emitSmoke();
+                    Particle par = p.emitParticle();
                     entityList.add(par);
                     root.getChildren().add(par.display());
                 }
@@ -135,8 +142,8 @@ public abstract class Level implements GameState
          */
         for(int i = 0; i < entityList.size(); i++){
             Entity e = entityList.get(i);
-            e.display();
             e.update();
+            e.display();
             
             if(e.deAlloc()){
                 entityList.remove(i);
@@ -155,24 +162,11 @@ public abstract class Level implements GameState
         playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
         playerHud.updateMoney(player.getMoney());
         
-        if(player.getHealth() < player.getMaxHealth()/3){
-            if(player.emitterSize() == 0){
-                player.addParticleEmitter(ParticleEmitter.smokeTrail(player.xPos(), player.yPos()), 24, -15);
-            }
-            
-            //temporary
-            Particle p = player.getParticleEmitters().get(0).emitSmoke();
-            entityList.add(p);
-            root.getChildren().add(0, p.display());
-        }
-        
         for(ParticleEmitter p : player.getParticleEmitters()){
-            p.setX(player.relativeX(p.getXOffset(), p.getYOffset()));
-            p.setY(player.relativeY(p.getXOffset(), p.getYOffset()));
+            Particle par = p.emitParticle();
+            entityList.add(par);
+            root.getChildren().add(0, par.display());
         }
-        
-        //temporary debug
-        //player.setHealth((player.getMaxHealth()/3)-1);
         
         
         pauseGame = false;
@@ -200,16 +194,6 @@ public abstract class Level implements GameState
                 }
             }
         }
-        
-        for(int i = 0; i < bulletList.size(); i++){
-            Pair<CombatEntity, Bullet> bulletPair = bulletList.get(i);
-            Bullet b = bulletPair.getValue();
-            if(!bulletPair.getKey().equals(player)){
-                if(player.collide(b) || b.collide(player)){
-                    
-                }
-            }
-        }
     }
     
     public ArrayList<Upgrade> getUpgrades(){
@@ -224,14 +208,10 @@ public abstract class Level implements GameState
         entityList.add(object);
         root.getChildren().add(object.display());
     }
-    public void spawnEnemy(CombatEntity enemy, ArrayList<Gun> gunList, int reward){
+    public void spawnEnemy(CombatEntity enemy, int reward){
         entityList.add(enemy);
         enemyList.add(enemy);
         enemy.setReward(reward);
         root.getChildren().add(enemy.display());
-        
-        for(Gun g : gunList){
-            enemy.addGun(g);
-        }
     }
 }

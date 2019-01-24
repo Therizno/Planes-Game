@@ -38,14 +38,14 @@ public class Plane extends CombatEntity
         displayHitbox = false;
         
         //mess with these variables to change the size of the hitbox
-        int planeRearLength = 58;
-        int planeFrontLength = 53;
-        int planeWidth = 20;
-        int engineSpan = 55;
-        int engineLength = 31;
-        int wingWidth = 22;
+        int planeRearLength = 40;
+        int planeFrontLength = 36;
+        int planeWidth = 15;
+        int engineSpan = 40;
+        int engineLength = 21;
+        int wingWidth = 13;
         int wingRearLength = 2;
-        int wingForwardLength = 17;
+        int wingForwardLength = 11;
         int wingDistance = engineSpan/2;
         
         /*
@@ -71,7 +71,7 @@ public class Plane extends CombatEntity
         displayGroup.getChildren().add(wingRight);
         
         if(displayHitbox){
-            debugCircle = new Circle(xPos(), yPos(), 10);
+            debugCircle = new Circle(xPos(), yPos(), 5);
             displayGroup.getChildren().add(debugCircle);
         }
         else{
@@ -84,6 +84,14 @@ public class Plane extends CombatEntity
     @Override
     public void update(){
         super.update();
+        
+        if(getHealth() < getMaxHealth()/3){
+            if(emitterSize() == 0)
+                addParticleEmitter(ParticleEmitter.smokeTrail(xPos(), yPos()), 16, -11);
+        }
+        else{
+            clearParticleEmitters();
+        }
         
         for (Rectangle r : hitbox){
             r.setX(r.getX()+dX());

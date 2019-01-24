@@ -9,7 +9,6 @@ public class EnemyAI
         
         //if the enemy plane is within +-turnThreshold degrees of facing the player, it will
         //not turn
-        System.out.println(Math.toDegrees(angleDifference));
         double turnThreshold = 5;
         if(Math.toDegrees(angleDifference) > turnThreshold){
             enemy.turnLeft();
