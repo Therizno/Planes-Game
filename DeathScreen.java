@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 public class DeathScreen implements GameState
 {
     GameState theState;
+    Level previousLevel;
     Group root;
     
     double startTime;
@@ -18,9 +19,10 @@ public class DeathScreen implements GameState
     
     Button deathMessage;
     
-    public DeathScreen(Group rootNode){
+    public DeathScreen(Level previous, Group rootNode){
         theState = this;
         root = rootNode;
+        previousLevel = previous;
         
         startTime = System.currentTimeMillis();
         displayMenu = false;
@@ -54,7 +56,7 @@ public class DeathScreen implements GameState
             actionMap.put("Restart", new EventHandler<MouseEvent>(){
                 public void handle(MouseEvent event){
                     root.getChildren().clear();
-                    theState = new Level1(root);
+                    theState = new Level1(root, previousLevel.getDifficulty());
                 }
             });
             

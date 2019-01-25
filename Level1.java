@@ -5,21 +5,21 @@ import javafx.scene.*;
 public class Level1 extends Level
 {
     Group root;
+    Difficulty dif;
     
     GunFactory gunFac;
     EnemyFactory enemyFac;
     
-    public Level1(Group rootNode){
-        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 4, 3, "player_texture.png", 100), rootNode);
+    public Level1(Group rootNode, Difficulty d){
+        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 4, 3, "player_texture.png", 100), rootNode, d);
         gunFac = new GunFactory();
         enemyFac = new EnemyFactory();
         
         root = rootNode;
+        dif = d;
         
         
         player.addGun(gunFac.m249());
-        
-        int offScreen = 100;
         
         spawnEnemy(enemyFac.easyPlane(GameEngine.XWIDTH/2, -offScreen), 20);
         
@@ -31,27 +31,14 @@ public class Level1 extends Level
                 player.subMoney(getCost());
             }
         });
-        
-        addUpgrade(new Upgrade("+Ammo", 20){
-            public void applyUpgrade(Plane player){
-                for(Gun g : player.getGuns()){
-                    g.setMaxAmmo(g.getMaxAmmo()+30);
-                    g.setAmmo(g.getMaxAmmo());
-                }
-
-                player.subMoney(getCost());
-            }
-        });
     }
 
     public void onKeyRelease(String keyCode){}
     public void onMouseRelease(double mouseX, double mouseY){}
     public void onMouseClick(double mouseX, double mouseY){}
     
-    @Override
-    public GameState newState(){
-        if(player.getHealth() > 0)
-            return super.newState();
-        return new DeathScreen(root);
+    public GameState nextLevel(){
+        player.setHealth(player.getMaxHealth());
+        return new Level2(player, root, dif);
     }
 }

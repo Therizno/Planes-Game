@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import javafx.scene.*;
 import javafx.event.EventHandler;
@@ -7,9 +8,7 @@ import javafx.scene.input.MouseEvent;
 
 public class StartMenu implements GameState
 {
-    private int buttonW;
-    private int buttonH;
-    private boolean started;
+    private GameState theState;
     private Group root;
     
     private ButtonFactory fac;
@@ -18,17 +17,18 @@ public class StartMenu implements GameState
     public StartMenu(Group rootNode)
     {
         root = rootNode;
+        theState = this;
         fac = new ButtonFactory();
         
-        buttonW = 140;
-        buttonH = 70;
+        int buttonW = 140;
+        int buttonH = 70;
         
         startButton = fac.defaultButton("START", fac.centerX(buttonW), fac.centerY(buttonH), buttonW, buttonH);
         
         startButton.setOnMouseClicked(
         new EventHandler<MouseEvent>(){
             public void handle(MouseEvent event){
-                started = true;
+                difMenu();
             }
         });
         
@@ -39,7 +39,7 @@ public class StartMenu implements GameState
     
     public void onKeyPress(String keyCode){
         if(keyCode.equals("ENTER"))
-            started = true;
+            difMenu();
     }
     
     public void onKeyRelease(String keyCode){}
@@ -48,13 +48,35 @@ public class StartMenu implements GameState
     public void onMouseClick(double mouseX, double mouseY){}
 
     public GameState newState(){
-        if(started){
-            root.getChildren().clear();
-            return new Level1(root);
-        }
-        
-        return this;
+        return theState;
     }
     
     public void updateAndDisplay(){}
+    
+    private void difMenu(){
+        LinkedHashMap<String, EventHandler<MouseEvent>> actionMap = new LinkedHashMap<String, EventHandler<MouseEvent>>();
+        
+        actionMap.put("Easy", new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                root.getChildren().clear();
+                theState = new Level1(root, new Difficulty(0.60));
+            }
+        });
+        
+        actionMap.put("Meduim", new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                root.getChildren().clear();
+                theState = new Level1(root, new Difficulty(0.80));
+            }
+        });
+        
+        actionMap.put("Hard", new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent event){
+                root.getChildren().clear();
+                theState = new Level1(root, new Difficulty(1));
+            }
+        });
+        
+        root.getChildren().add(new ButtonFactory().buttonMenu("Difficulty", actionMap));
+    }
 }

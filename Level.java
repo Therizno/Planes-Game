@@ -17,14 +17,20 @@ public abstract class Level implements GameState
     protected Plane player;
     private Group root;
     private Hud playerHud;
+    private Difficulty dif;
     
     public boolean pauseGame;
     private boolean guiDisabled;
     
-    private EnemyAI ai = new EnemyAI();
+    private EnemyAI ai;
+    
+    private GameTimer timer;
     
     
-    public Level(Plane player, Group rootNode){
+    public static final int offScreen = 100;
+    
+    
+    public Level(Plane player, Group rootNode, Difficulty d){
         entityList = new ArrayList<Entity>();
         bulletList = new ArrayList<Pair<CombatEntity, Bullet>>();
         enemyList = new ArrayList<CombatEntity>();
@@ -35,10 +41,16 @@ public abstract class Level implements GameState
         entityList.add(player);
         root = rootNode;
         root.getChildren().add(player.display());
+        dif = d;
         
         //set up hud
         playerHud = new Hud(this);
         root.getChildren().add(playerHud.hud());
+        
+        
+        ai = new EnemyAI();
+        
+        timer = new GameTimer();
         
         pauseGame = false;
         guiDisabled = false;
@@ -70,6 +82,18 @@ public abstract class Level implements GameState
     public GameState newState(){
         if(pauseGame){
             return new PauseState(this, root);
+        }
+        else if(player.getHealth() <= 0){
+            return new DeathScreen(this, root);
+        }
+        else if(enemyList.size() == 0){
+            timer.start();
+            if(timer.waitFor(5000)){
+                root.getChildren().clear();
+                entityList.clear();
+                bulletList.clear();
+                return nextLevel();
+            }
         }
         return this;
     }
@@ -187,7 +211,7 @@ public abstract class Level implements GameState
                     }
                 }
                 else if(player.collide(b) || b.collide(player)){
-                    player.subHealth(b.getDamage());
+                    player.subHealth(b.getDamage()*dif.damageReduction());
                     bulletList.remove(j);
                     entityList.remove(b);
                     root.getChildren().remove(b.display());
@@ -214,4 +238,10 @@ public abstract class Level implements GameState
         enemy.setReward(reward);
         root.getChildren().add(enemy.display());
     }
+    
+    public Difficulty getDifficulty(){
+        return dif;
+    }
+    
+    public abstract GameState nextLevel();
 }
