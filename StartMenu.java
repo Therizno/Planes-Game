@@ -5,11 +5,15 @@ import javafx.scene.*;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class StartMenu implements GameState
 {
     private GameState theState;
     private Group root;
+    
+    private ImageView background;
     
     private ButtonFactory fac;
     private Button startButton;
@@ -20,10 +24,15 @@ public class StartMenu implements GameState
         theState = this;
         fac = new ButtonFactory();
         
+        background = new ImageView(new Image("cover.png"));
+        background.setFitWidth(GameEngine.XWIDTH);
+        background.setFitHeight(GameEngine.YHEIGHT);
+        root.getChildren().add(background);
+        
         int buttonW = 140;
         int buttonH = 70;
         
-        startButton = fac.defaultButton("START", fac.centerX(buttonW), fac.centerY(buttonH), buttonW, buttonH);
+        startButton = fac.defaultButton("START", fac.centerX(buttonW), fac.centerY(buttonH)+50, buttonW, buttonH);
         
         startButton.setOnMouseClicked(
         new EventHandler<MouseEvent>(){
