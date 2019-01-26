@@ -9,17 +9,20 @@ public class Level3 extends Level
         super(player, rootNode, d, "Level 3");
         root = rootNode;
         
-        EnemyFactory fac = new EnemyFactory();
+        EnemyFactory enemyFac = new EnemyFactory();
+        GunFactory gunFac = new GunFactory();
         
         for(int i = 0; i <= 3; i++){
-            spawnEnemy(fac.easyPlane(i*(GameEngine.XWIDTH/3), -offScreen), 20);
+            spawnEnemy(enemyFac.easyPlane(i*(GameEngine.XWIDTH/3), -offScreen));
         }
         
-        addUpgrade(new Upgrade("+Health", 40){
+        addUpgrade(new HealthUpgrade(40, 20));
+        
+        addUpgrade(new Upgrade("M240", 80){
             public void applyUpgrade(Plane player){
-                player.setHealth(player.getMaxHealth()+20);
+                player.clearGuns();
                 
-                player.subMoney(getCost());
+                player.addGun(gunFac.m240());
             }
         });
     }

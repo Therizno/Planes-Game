@@ -241,10 +241,9 @@ public abstract class Level implements GameState
         entityList.add(object);
         root.getChildren().add(object.display());
     }
-    public void spawnEnemy(CombatEntity enemy, int reward){
+    public void spawnEnemy(CombatEntity enemy){
         entityList.add(enemy);
         enemyList.add(enemy);
-        enemy.setReward(reward);
         root.getChildren().add(enemy.display());
     }
     

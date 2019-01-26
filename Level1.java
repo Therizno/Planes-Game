@@ -22,16 +22,9 @@ public class Level1 extends Level
         
         player.addGun(gunFac.m249());
         
-        spawnEnemy(enemyFac.easyPlane(GameEngine.XWIDTH/2, -offScreen), 20);
+        spawnEnemy(enemyFac.easyPlane(GameEngine.XWIDTH/2, -offScreen));
         
-        addUpgrade(new Upgrade("+Health", 20){
-            public void applyUpgrade(Plane player){
-                player.setMaxHealth(player.getMaxHealth()+30);
-                player.setHealth(player.getMaxHealth());
-                
-                player.subMoney(getCost());
-            }
-        });
+        addUpgrade(new HealthUpgrade(20, 30));
     }
 
     public void onKeyRelease(String keyCode){}

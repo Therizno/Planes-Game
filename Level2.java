@@ -14,20 +14,11 @@ public class Level2 extends Level
         
         EnemyFactory fac = new EnemyFactory();
         
-        spawnEnemy(fac.easyPlane(GameEngine.XWIDTH/2, -offScreen), 20);
-        spawnEnemy(fac.easyPlane(-offScreen, GameEngine.YHEIGHT/2), 20);
-        spawnEnemy(fac.easyPlane(GameEngine.XWIDTH+offScreen, GameEngine.YHEIGHT/2), 20);
+        spawnEnemy(fac.easyPlane(GameEngine.XWIDTH/2, -offScreen));
+        spawnEnemy(fac.easyPlane(-offScreen, GameEngine.YHEIGHT/2));
+        spawnEnemy(fac.easyPlane(GameEngine.XWIDTH+offScreen, GameEngine.YHEIGHT/2));
         
-        addUpgrade(new Upgrade("+Ammo", 20){
-            public void applyUpgrade(Plane player){
-                for(Gun g : player.getGuns()){
-                    g.setMaxAmmo(g.getMaxAmmo()+30);
-                    g.setAmmo(g.getMaxAmmo());
-                }
-
-                player.subMoney(getCost());
-            }
-        });
+        addUpgrade(new AmmoUpgrade(20, 50));
         
         addUpgrade(new Upgrade("dual M249", 40){
             public void applyUpgrade(Plane player){

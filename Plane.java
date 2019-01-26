@@ -35,10 +35,10 @@ public class Plane extends CombatEntity
          * generating hitbox
          */
         hitbox = new ArrayList<Rectangle>();
-        displayHitbox = false;
+        displayHitbox = true;
         
         //mess with these variables to change the size of the hitbox
-        int planeRearLength = 40;
+        int planeRearLength = 38;
         int planeFrontLength = 36;
         int planeWidth = 15;
         int engineSpan = 40;
