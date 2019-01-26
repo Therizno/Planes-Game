@@ -32,7 +32,7 @@ public class GameEngine extends Application
         sets the stage
         */
 
-        stage.setTitle("GAMETITLE");
+        stage.setTitle("FALLING SKIES");
 
         Group rootNode = new Group();       //sets the root node, scene
         Scene scene = new Scene(rootNode);

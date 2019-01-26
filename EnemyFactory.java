@@ -15,7 +15,7 @@ public class EnemyFactory
     }
     
     public Plane mediumPlane(int x, int y){
-        Plane p = new Plane(x, y, 2, 2, "enemy_plane.png", 75);
+        Plane p = new Plane(x, y, 2, 2, "enemy_plane.png", 100);
         p.addGun(fac.m240());
         p.setReward(50);
         return p;

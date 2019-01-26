@@ -10,6 +10,8 @@ public class Level4 extends Level
         
         spawnEnemy(new EnemyFactory().mediumPlane(GameEngine.XWIDTH/2, -offScreen));
         
+        addUpgrade(new M240Upgrade(80));
+        
         root = rootNode;
     }
     
