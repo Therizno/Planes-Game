@@ -6,7 +6,8 @@ public class Level2 extends Level
     
     public Level2(Plane player, Group rootNode, Difficulty d)
     {
-        super(player, rootNode, d);
+        super(player, rootNode, d, "Level 2");
+        
         root = rootNode;
         
         EnemyFactory fac = new EnemyFactory();

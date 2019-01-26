@@ -11,7 +11,8 @@ public class Level1 extends Level
     EnemyFactory enemyFac;
     
     public Level1(Group rootNode, Difficulty d){
-        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 4, 3, "player_texture.png", 100), rootNode, d);
+        super(new Plane(GameEngine.XWIDTH/2, GameEngine.YHEIGHT - 50, 4, 3, "player_texture.png", 100), rootNode, d, "Level 1");
+        
         gunFac = new GunFactory();
         enemyFac = new EnemyFactory();
         

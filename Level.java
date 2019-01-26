@@ -19,6 +19,8 @@ public abstract class Level implements GameState
     private Hud playerHud;
     private Difficulty dif;
     
+    private String levelName;
+    
     public boolean pauseGame;
     private boolean guiDisabled;
     
@@ -30,12 +32,14 @@ public abstract class Level implements GameState
     public static final int offScreen = 100;
     
     
-    public Level(Plane player, Group rootNode, Difficulty d){
+    public Level(Plane player, Group rootNode, Difficulty d, String name){
         entityList = new ArrayList<Entity>();
         bulletList = new ArrayList<Pair<CombatEntity, Bullet>>();
         enemyList = new ArrayList<CombatEntity>();
         
         availableUpgrades = new ArrayList<Upgrade>();
+        
+        levelName = name;
         
         this.player = player;
         entityList.add(player);
@@ -92,6 +96,9 @@ public abstract class Level implements GameState
                 root.getChildren().clear();
                 entityList.clear();
                 bulletList.clear();
+                
+                player.setHealth(player.getMaxHealth());
+                player.fillAmmo();
                 return nextLevel();
             }
         }
@@ -182,9 +189,7 @@ public abstract class Level implements GameState
         /*
          * player logic
          */
-        playerHud.updateHealth((int)player.getHealth(), (int)player.getMaxHealth());
-        playerHud.updateAmmo(player.getAmmo(), player.getMaxAmmo());
-        playerHud.updateMoney(player.getMoney());
+        playerHud.updateHud();
         
         for(ParticleEmitter p : player.getParticleEmitters()){
             Particle par = p.emitParticle();
@@ -218,6 +223,10 @@ public abstract class Level implements GameState
                 }
             }
         }
+    }
+    
+    public String getName(){
+        return levelName;
     }
     
     public ArrayList<Upgrade> getUpgrades(){

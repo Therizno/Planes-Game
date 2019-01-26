@@ -14,6 +14,11 @@ public class Hud
 {
     Level level;
     
+    GameTimer timer;
+    
+    
+    Button title;
+    
     Button pause;
     Group hud;
     
@@ -30,6 +35,9 @@ public class Hud
     public Hud(Level theLevel)
     {
         level = theLevel;
+        
+        timer = new GameTimer();
+        
         playerHealth = -1;
         playerMoney = -1;
         playerAmmo = -1;
@@ -40,6 +48,7 @@ public class Hud
         labelList.add(moneyLabel);
         labelList.add(ammoLabel);
         labelList.add(healthLabel);
+        
         labelXMargin = 15;
         labelYMargin = 40;
         labelYGap = 35;
@@ -49,6 +58,12 @@ public class Hud
         hud = new Group();
         ButtonFactory fac = new ButtonFactory();
         
+        /*
+         * level title
+         */
+        
+        title = fac.messageToUser(level.getName(), "user-message-green");
+        hud.getChildren().add(title);
         
         /*
          * pause button
@@ -85,6 +100,16 @@ public class Hud
         updateUpgrades();
         
         return hud;
+    }
+    
+    public void updateHud(){
+        timer.start();
+        if(timer.waitFor(3000))
+            hud.getChildren().remove(title);
+        
+        updateHealth((int)level.player.getHealth(), (int)level.player.getMaxHealth());
+        updateMoney(level.player.getMoney());
+        updateAmmo(level.player.getAmmo(), level.player.getMaxAmmo());
     }
     
     public void updateUpgrades(){
@@ -132,12 +157,6 @@ public class Hud
                     }
                 });
                 
-                b.setOnMouseEntered(new EventHandler<MouseEvent>(){
-                    public void handle(MouseEvent event){
-                        
-                    }
-                });
-                
                 upgradeGroup.getChildren().add(b);
                 buttonX += buttonXSize;
             }   
@@ -146,7 +165,7 @@ public class Hud
         }
     }
     
-    public void updateHealth(int health, int maxHealth){
+    private void updateHealth(int health, int maxHealth){
         if(playerHealth != health){
             int labelPosition = labelList.indexOf(healthLabel);
             hud.getChildren().remove(healthLabel);
@@ -174,7 +193,7 @@ public class Hud
             hud.getChildren().add(healthLabel);
         }
     }
-    public void updateMoney(int money){
+    private void updateMoney(int money){
         if(playerMoney != money){
             int labelPosition = labelList.indexOf(moneyLabel);
             hud.getChildren().remove(moneyLabel);
@@ -189,7 +208,7 @@ public class Hud
             hud.getChildren().add(moneyLabel);
         }
     }
-    public void updateAmmo(int ammo, int maxAmmo){
+    private void updateAmmo(int ammo, int maxAmmo){
         if(playerAmmo != ammo){
             int labelPosition = labelList.indexOf(ammoLabel);
             hud.getChildren().remove(ammoLabel);

@@ -100,6 +100,20 @@ public abstract class CombatEntity extends Entity
         particleSources.clear();
     }
     
+    public void addAmmo(int amount){
+        int each = amount/guns.size();
+        int remainder = amount%guns.size();
+        for(Gun g : guns){
+            g.addAmmo(each);
+        }
+        if(guns.size() > 0)
+            guns.get(0).addAmmo(remainder);
+    }
+    public void fillAmmo(){
+        for(Gun g : guns){
+            g.setAmmo(g.getMaxAmmo());
+        }
+    }
     public int getAmmo(){
         int totalAmmo = 0;
         for(Gun g : guns){

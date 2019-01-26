@@ -22,4 +22,8 @@ public class GameTimer
             return true;
         return false;
     }
+    
+    public void reset(){
+        started = false;
+    }
 }
