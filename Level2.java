@@ -3,12 +3,14 @@ import javafx.scene.Group;
 public class Level2 extends Level
 {
     Group root;
+    Difficulty dif;
     
     public Level2(Plane player, Group rootNode, Difficulty d)
     {
         super(player, rootNode, d, "Level 2");
         
         root = rootNode;
+        dif = d;
         
         EnemyFactory fac = new EnemyFactory();
         
@@ -44,6 +46,6 @@ public class Level2 extends Level
     public void onMouseClick(double mouseX, double mouseY){}
     
     public GameState nextLevel(){
-        return new StartMenu(root);
+        return new Level3(player, root, dif);
     }
 }
