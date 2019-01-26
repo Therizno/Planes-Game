@@ -13,4 +13,11 @@ public class EnemyFactory
         p.setReward(20);
         return p;
     }
+    
+    public Plane mediumPlane(int x, int y){
+        Plane p = new Plane(x, y, 2, 2, "enemy_plane.png", 75);
+        p.addGun(fac.m240());
+        p.setReward(50);
+        return p;
+    }
 }
